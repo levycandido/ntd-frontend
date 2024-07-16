@@ -1,0 +1,26 @@
+<div class="top-menu-container">
+  <nav>
+    <ul class="menu">
+      <li class="menu-item"><a href="/">Home</a></li>
+      <li class="menu-item">
+        <a href="#" (click)="toggleCadastroMenu($event)">Enrol</a>
+        <ul class="submenu" [class.show]="showCadastroMenu && isAdmin">
+          <li class="submenu-item"><a href="/signup">Users</a></li>
+        </ul>
+      </li>
+      <li class="menu-item"><a href="/records">Records</a></li>
+    </ul>
+  </nav>
+  <div class="right-menu">
+    <ng-container *ngIf="isLoggedIn; else loggedOut">
+      <div class="user-info">
+        <span>{{userName}}</span>
+        <span>Balance: ${{balance}}</span>
+      </div>
+      <button mat-raised-button class="logout-button" color="primary" (click)="logout()">Logout</button>
+    </ng-container>
+    <ng-template #loggedOut>
+      <button mat-raised-button class="login-button" color="primary" [routerLink]="['/login']">Login</button>
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+<mat-toolbar color="primary">
+  <button mat-button routerLink="/">Back to Calculator</button>
+</mat-toolbar>
+
+<div class="records-container">
+  <mat-form-field>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Search">
+  </mat-form-field>
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <ng-container matColumnDef="operation">
+      <th mat-header-cell *matHeaderCellDef> Operation </th>
+      <td mat-cell *matCellDef="let record"> {{record.operation}} </td>
+    </ng-container>
+    <ng-container matColumnDef="amount">
+      <th mat-header-cell *matHeaderCellDef> Amount </th>
+      <td mat-cell *matCellDef="let record"> {{record.amount}} </td>
+    </ng-container>
+    <ng-container matColumnDef="balance">
+      <th mat-header-cell *matHeaderCellDef> Balance </th>
+      <td mat-cell *matCellDef="let record"> {{record.balance}} </td>
+    </ng-container>
+    <ng-container matColumnDef="response">
+      <th mat-header-cell *matHeaderCellDef> Response </th>
+      <td mat-cell *matCellDef="let record"> {{record.response}} </td>
+    </ng-container>
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef> Date </th>
+      <td mat-cell *matCellDef="let record"> {{record.date | date}} </td>
+    </ng-container>
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef> Delete </th>
+      <td mat-cell *matCellDef="let record">
+        <button mat-button (click)="deleteRecord(record.id)">Delete</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
