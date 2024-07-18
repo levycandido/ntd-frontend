@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import {BalanceService} from "../services/BalanceService";
+import {Component, OnInit} from '@angular/core';
+import {UserInfoService} from "../services/UserNameService";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-top-menu',
@@ -7,20 +8,34 @@ import {BalanceService} from "../services/BalanceService";
   styleUrls: ['./top-menu.component.scss']
 })
 export class TopMenuComponent implements OnInit {
-  isLoggedIn: boolean = true;
+  isLoggedIn: boolean = false;
   isAdmin: boolean = true;
   showCadastroMenu: boolean = false;
   protected userName: string;
   protected balance: number;
 
-  constructor(private balanceService: BalanceService) {}
-
+  constructor(private userInfoService: UserInfoService,
+              private router: Router) {
+  }
 
   ngOnInit(): void {
-    this.userName = localStorage.getItem('userName');
-    this.balanceService.balance$.subscribe(balance => {
+
+    this.userInfoService.userName$.subscribe(userName => {
+      this.userName = userName;
+    });
+
+    this.userInfoService.balance$.subscribe(balance => {
       this.balance = balance;
     });
+
+    this.isLoggedIn = this.isLogged();
+  }
+
+  private isLogged(): boolean {
+    if (this.userName || this.userName != 'undefined') {
+      return this.isLoggedIn = true;
+    }
+    return false;
   }
 
   toggleCadastroMenu(event: Event): void {
@@ -29,7 +44,7 @@ export class TopMenuComponent implements OnInit {
   }
 
   logout(): void {
-    console.log('User logged out');
     this.isLoggedIn = false;
+    this.router.navigate(['/login']);
   }
 }

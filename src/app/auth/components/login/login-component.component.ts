@@ -6,8 +6,8 @@ import {catchError, switchMap, tap} from "rxjs/operators";
 import {of} from "rxjs";
 import {NotificationService} from "../../../services/NotificationService";
 import {UserService} from "../../../services/UserService";
-import {AuthService} from "../../../services/auth.service";
 import {User} from "../../../models/User";
+import {UserInfoService} from "../../../services/UserNameService";
 
 @Component({
   selector: 'app-login',
@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private notificationService: NotificationService,
     private userService: UserService,
+    private userInfoService: UserInfoService,
   ) {
   }
 
@@ -51,6 +52,7 @@ export class LoginComponent implements OnInit {
       }),
       tap(userDetails => {
         if (userDetails) {
+          this.userInfoService.setUserName(userDetails.email);
           localStorage.setItem('email', userDetails.email);
           localStorage.setItem('userName', userDetails.username);
           localStorage.setItem('balance', userDetails.balance);

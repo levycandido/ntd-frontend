@@ -1,7 +1,7 @@
 <div class="login-background">
   <div class="login-container-login">
     <div class="login-card">
-      <h2 class="login-title">Welcome to NTD Software Challenge</h2>
+      <h2 class="login-title">Welcome to NTD Challenge</h2>
       <p class="login-subtitle">Please log in to continue</p>
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline" class="full-width">
@@ -18,7 +18,7 @@
           <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid" class="btn-primary">Login</button>
         </div>
         <div class="extra-actions">
-          <a href="/signup" class="forgot-password">Create User</a>
+          <a href="#" class="forgot-password" [routerLink]="['/signup']">Create User</a>
         </div>
       </form>
     </div>

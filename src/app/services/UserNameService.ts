@@ -19,12 +19,12 @@ export class UserInfoService {
   }
 
   private getUserNameFromStorage(): string {
-    const userName = localStorage.getItem('userName');
+    const userName = localStorage.getItem('email');
     return userName ? userName : '';
   }
 
   setBalance(newBalance: number): void {
-    localStorage.setItem('balance', newBalance.toString());
+  //  localStorage.setItem('balance', newBalance.toString());
     this.balanceSubject.next(newBalance);
   }
 

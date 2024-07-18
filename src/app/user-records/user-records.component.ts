@@ -19,7 +19,6 @@ export class UserRecordsComponent implements OnInit {
   displayedColumns: string[] = ['operation', 'amount', 'balance', 'response', 'date', 'delete'];
   dataSource = new MatTableDataSource<Record>([
     { operation: 'Addition', amount: 5, balance: 95, response: '10', date: new Date() },
-    // Add more sample records here
   ]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -34,6 +33,5 @@ export class UserRecordsComponent implements OnInit {
   }
 
   deleteRecord(id: number) {
-    // Logic to handle record deletion
   }
 }

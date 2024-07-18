@@ -1,33 +1,40 @@
 <div class="calculator-container">
-  <div class="display">
-    {{displayValue}}
-  </div>
-  <div class="button-row">
-    <button mat-button (click)="clear()">C</button>
-    <button mat-button (click)="toggleSign()">+/-</button>
-    <button mat-button (click)="percent()">%</button>
-    <button mat-button (click)="operator(TypeEnum.DIVISION)">/</button>
-  </div>
-  <div class="button-row">
-    <button mat-button *ngFor="let num of [7, 8, 9]" (click)="inputNumber(num)">{{num}}</button>
-    <button mat-button (click)="operator(TypeEnum.MULTIPLICATION)">*</button>
-  </div>
-  <div class="button-row">
-    <button mat-button *ngFor="let num of [4, 5, 6]" (click)="inputNumber(num)">{{num}}</button>
-    <button mat-button (click)="operator(TypeEnum.SUBTRACTION)">-</button>
-  </div>
-  <div class="button-row">
-    <button mat-button *ngFor="let num of [1, 2, 3]" (click)="inputNumber(num)">{{num}}</button>
-    <button mat-button (click)="operator(TypeEnum.ADDITION)">+</button>
-  </div>
-  <div class="button-row">
-    <button mat-button (click)="inputNumber(0)">0</button>
-    <button mat-button (click)="decimal()">.</button>
-    <button mat-button (click)="calculate()">=</button>
-  </div>
-</div>
 
-<div class="links">
-  <button mat-button routerLink="/user-records">User Records</button>
-  <button mat-button>New Operation</button>
+  <div class="right-menu">
+    <ng-container *ngIf="isLoggedIn; else loggedOut">
+      <div class="user-info">
+        <span>User: {{userName}}</span>
+        <span>Balance: {{balance}}</span>
+      </div>
+    </ng-container>
+    <ng-template #loggedOut>
+      <button mat-raised-button class="login-button" color="primary" [routerLink]="['/login']">Login</button>
+    </ng-template>
+  </div>
+
+  <div class="display">{{displayValue}}</div>
+
+  <div class="button-row">
+    <button mat-raised-button class="clear" (click)="clear()">C</button>
+    <button mat-raised-button class="toggle-sign" (click)="toggleSign()">+/-</button>
+    <button mat-raised-button class="percent" (click)="percent()">%</button>
+    <button mat-raised-button class="operation" (click)="operator(TypeEnum.DIVISION)">/</button>
+  </div>
+  <div class="button-row">
+    <button mat-raised-button *ngFor="let num of [7, 8, 9]" (click)="inputNumber(num)">{{num}}</button>
+    <button mat-raised-button class="operation" (click)="operator(TypeEnum.MULTIPLICATION)">*</button>
+  </div>
+  <div class="button-row">
+    <button mat-raised-button *ngFor="let num of [4, 5, 6]" (click)="inputNumber(num)">{{num}}</button>
+    <button mat-raised-button class="operation" (click)="operator(TypeEnum.SUBTRACTION)">-</button>
+  </div>
+  <div class="button-row">
+    <button mat-raised-button *ngFor="let num of [1, 2, 3]" (click)="inputNumber(num)">{{num}}</button>
+    <button mat-raised-button class="operation" (click)="operator(TypeEnum.ADDITION)">+</button>
+  </div>
+  <div class="button-row">
+    <button mat-raised-button (click)="inputNumber(0)">0</button>
+    <button mat-raised-button (click)="decimal()">.</button>
+    <button mat-raised-button class="equals" (click)="calculate()">=</button>
+  </div>
 </div>

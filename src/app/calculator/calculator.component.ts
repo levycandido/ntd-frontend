@@ -3,6 +3,8 @@ import {TypeEnum} from '../models/TypeEnum';
 import {Record} from '../models/record';
 import {RecordService} from "../services/RecordService";
 import {UserInfoService} from "../services/UserNameService";
+import {AuthService} from "../services/auth.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-calculator',
@@ -15,24 +17,36 @@ export class CalculatorComponent implements OnInit {
   private secondOperand: number | null = null;
   private currentOperator: TypeEnum | null = null;
   private waitingForSecondOperand: boolean = false;
-  username: string = localStorage.getItem('email');
-  balance: number = 100;
+  protected userName: string;
+  protected balance: number = 0;
 
   TypeEnum = TypeEnum;
+  isLoggedIn: boolean;
+
 
   constructor(private recordService: RecordService,
-              private userInfoService: UserInfoService ) {
-  }
+              private userInfoService: UserInfoService,
+              private authService: AuthService,
+              private router: Router) {}
 
   ngOnInit(): void {
     this.userInfoService.userName$.subscribe(userName => {
-      this.username = userName;
+      this.userName = userName;
     });
+
     this.userInfoService.balance$.subscribe(balance => {
       this.balance = balance;
     });
+
+    this.isLoggedIn = this.isLogged();
   }
 
+  private isLogged(): boolean {
+    if (this.userName || this.userName != 'undefined') {
+      return this.isLoggedIn = true;
+    }
+    this.router.navigate(['/login']);
+  }
 
   inputNumber(num: number): void {
     if (this.waitingForSecondOperand) {
@@ -71,7 +85,7 @@ export class CalculatorComponent implements OnInit {
     } else if (this.currentOperator) {
       this.secondOperand = parseFloat(this.displayValue);
       const record: Record = new Record(
-        this.username,
+        this.userName,
         this.getOperatorDescription(this.currentOperator),
         0,
         this.firstOperand,
@@ -85,9 +99,7 @@ export class CalculatorComponent implements OnInit {
         .subscribe(result => {
           this.firstOperand = result.operationResponse;
           this.displayValue = String(this.firstOperand);
-          this.userInfoService.setUserName(result.userId);
           this.userInfoService.setBalance(result.userBalance);
-
         });
     }
 
@@ -99,7 +111,7 @@ export class CalculatorComponent implements OnInit {
     if (this.currentOperator && this.firstOperand !== null) {
       this.secondOperand = parseFloat(this.displayValue);
       const record: Record = new Record(
-        this.username,
+        this.userName,
         this.getOperatorDescription(this.currentOperator),
         0,
         this.firstOperand,
@@ -111,7 +123,7 @@ export class CalculatorComponent implements OnInit {
 
       this.recordService.calculateOperation(record)
         .subscribe(result => {
-          localStorage.setItem('balance', String(result.userBalance))
+          this.userInfoService.setBalance(result.userBalance);
           this.displayValue = String(result.operationResponse);
           this.firstOperand = null;
           this.currentOperator = null;

@@ -28,9 +28,9 @@ import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 
 const routes: Routes = [
+  {path: '', component: CalculatorComponent},
   {path: 'login', component: LoginComponent},
-  {path: "signup", component: signupComponent},
-  {path: "", component: CalculatorComponent},
+  {path: 'signup', component: signupComponent}
 ];
 
 @NgModule({

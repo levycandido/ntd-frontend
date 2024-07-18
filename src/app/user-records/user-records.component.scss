@@ -1,7 +1,68 @@
-.records-container {
-  padding: 20px;
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 64px; /* Considera a altura da toolbar */
+  font-family: 'Roboto', sans-serif;
 }
 
-table {
+.mat-toolbar {
   width: 100%;
+  justify-content: space-between;
+  background: linear-gradient(145deg, #51ebfb, #06563e);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.records-container {
+  max-width: 90%;
+  width: 100%;
+  background: #2a2a2a;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+}
+
+.search-field {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.mat-form-field .mat-form-field-flex {
+  background-color: #424242;
+  color: #ffffff;
+}
+
+.mat-form-field .mat-form-field-label {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.mat-icon {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.mat-header-cell, .mat-cell {
+  color: white;
+}
+
+.mat-elevation-z8 {
+  background: #424242;
+}
+
+.mat-raised-button {
+  color: white;
+}
+
+.mat-paginator {
+  color: white;
+  margin-top: 20px;
 }

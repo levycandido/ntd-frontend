@@ -13,10 +13,6 @@
   </nav>
   <div class="right-menu">
     <ng-container *ngIf="isLoggedIn; else loggedOut">
-      <div class="user-info">
-        <span>{{userName}}</span>
-        <span>Balance: ${{balance}}</span>
-      </div>
       <button mat-raised-button class="logout-button" color="primary" (click)="logout()">Logout</button>
     </ng-container>
     <ng-template #loggedOut>

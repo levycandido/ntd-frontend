@@ -25,11 +25,12 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return localStorage.getItem('email') !== null;
+    return localStorage.getItem('userName') !== null;
   }
 
   logout(): void {
     localStorage.removeItem('email');
+    localStorage.removeItem('userName');
     localStorage.removeItem('jwt');
   }
 }
