@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserInfoService} from "../services/UserNameService";
 import {Router} from "@angular/router";
+import {AuthService} from "../services/auth.service";
 
 @Component({
   selector: 'app-top-menu',
@@ -15,7 +16,8 @@ export class TopMenuComponent implements OnInit {
   protected balance: number;
 
   constructor(private userInfoService: UserInfoService,
-              private router: Router) {
+              private router: Router,
+              private authService: AuthService) {
   }
 
   ngOnInit(): void {
@@ -26,6 +28,10 @@ export class TopMenuComponent implements OnInit {
 
     this.userInfoService.balance$.subscribe(balance => {
       this.balance = balance;
+    });
+
+    this.authService.isLoggedIn$.subscribe((loggedIn: boolean) => {
+      this.isLoggedIn = loggedIn;
     });
 
     this.isLoggedIn = this.isLogged();

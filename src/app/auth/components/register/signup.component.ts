@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {JwtService2} from "../../service/jwt-service2.service";
 import {Router} from "@angular/router";
-import {User} from "../../../models/User";
+import {UserDTO} from "../../../DTO/UserDTO";
 
 @Component({
   selector: 'app-register',
@@ -41,7 +41,7 @@ export class signupComponent implements OnInit {
   }
 
   onSubmit() {
-    const user: User = this.createUser();
+    const user: UserDTO = this.createUser();
     this.service.addUser(user).subscribe(
       (response) => {
         if (response.id != null) {
@@ -53,14 +53,14 @@ export class signupComponent implements OnInit {
   }
 
 
-  private createUser(): User {
+  private createUser(): UserDTO {
     return {
       userName:  this.registerForm?.get('name')?.value,
       password: this.registerForm?.get('password')?.value,
       email: this.registerForm?.get('email')?.value,
       status: 'Active',
       balance: this.INITIAL_BALANCE
-    } as User;
+    } as UserDTO;
 
   }
 

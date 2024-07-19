@@ -1,5 +1,4 @@
 <div class="calculator-container">
-
   <div class="right-menu">
     <ng-container *ngIf="isLoggedIn; else loggedOut">
       <div class="user-info">
@@ -18,6 +17,7 @@
     <button mat-raised-button class="clear" (click)="clear()">C</button>
     <button mat-raised-button class="toggle-sign" (click)="toggleSign()">+/-</button>
     <button mat-raised-button class="percent" (click)="percent()">%</button>
+    <button mat-raised-button class="operation" (click)="operator(TypeEnum.SQUARE_ROOT)">√</button>
     <button mat-raised-button class="operation" (click)="operator(TypeEnum.DIVISION)">/</button>
   </div>
   <div class="button-row">
@@ -33,8 +33,17 @@
     <button mat-raised-button class="operation" (click)="operator(TypeEnum.ADDITION)">+</button>
   </div>
   <div class="button-row">
-    <button mat-raised-button (click)="inputNumber(0)">0</button>
+    <button mat-raised-button class="zero" (click)="inputNumber(0)">0</button>
     <button mat-raised-button (click)="decimal()">.</button>
     <button mat-raised-button class="equals" (click)="calculate()">=</button>
+  </div>
+
+  <div class="links">
+    <button mat-button routerLink="/records">User Records</button>
+    <button mat-button (click)="randomString(TypeEnum.RANDOM_STRING)">Random String</button>
+  </div>
+
+  <div class="string-created" *ngIf="stringCreated">
+    <span>String Created: {{stringCreated}}</span>
   </div>
 </div>

@@ -1,10 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {TypeEnum} from '../models/TypeEnum';
-import {Record} from '../models/record';
+import {TypeEnum} from '../DTO/TypeEnum';
 import {RecordService} from "../services/RecordService";
 import {UserInfoService} from "../services/UserNameService";
-import {AuthService} from "../services/auth.service";
 import {Router} from "@angular/router";
+import {Record} from "../entity/Record";
+import {Operation} from "../entity/Operation";
+import {catchError, switchMap, tap} from "rxjs/operators";
+import {of} from "rxjs";
+import {NotificationService} from "../services/NotificationService";
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-calculator',
@@ -19,15 +23,18 @@ export class CalculatorComponent implements OnInit {
   private waitingForSecondOperand: boolean = false;
   protected userName: string;
   protected balance: number = 0;
+  public stringCreated = null;
 
   TypeEnum = TypeEnum;
   isLoggedIn: boolean;
-
+  private createString: boolean;
 
   constructor(private recordService: RecordService,
               private userInfoService: UserInfoService,
-              private authService: AuthService,
-              private router: Router) {}
+              private notificationService: NotificationService,
+              private decimalPipe: DecimalPipe,
+              private router: Router) {
+  }
 
   ngOnInit(): void {
     this.userInfoService.userName$.subscribe(userName => {
@@ -80,74 +87,87 @@ export class CalculatorComponent implements OnInit {
   }
 
   operator(op: TypeEnum): void {
-    if (this.firstOperand === null) {
+    if (this.firstOperand === null && op !== TypeEnum.SQUARE_ROOT) {
       this.firstOperand = parseFloat(this.displayValue);
-    } else if (this.currentOperator) {
+    } else if (this.currentOperator || op === TypeEnum.SQUARE_ROOT) {
       this.secondOperand = parseFloat(this.displayValue);
       const record: Record = new Record(
         this.userName,
-        this.getOperatorDescription(this.currentOperator),
+        this.getOperatorDescription(this.currentOperator ? this.currentOperator : op),
         0,
-        this.firstOperand,
+        this.currentOperator ? this.firstOperand : this.secondOperand,
         this.secondOperand,
         0,
-        0,
+        "",
         new Date()
       );
 
-      this.recordService.calculateOperation(record)
-        .subscribe(result => {
-          this.firstOperand = result.operationResponse;
-          this.displayValue = String(this.firstOperand);
-          this.userInfoService.setBalance(result.userBalance);
-        });
+      this.addRecord(record)
     }
 
-    this.currentOperator = op;
+    this.currentOperator = op === TypeEnum.SQUARE_ROOT ? null : op;
     this.waitingForSecondOperand = true;
   }
 
   calculate(): void {
     if (this.currentOperator && this.firstOperand !== null) {
       this.secondOperand = parseFloat(this.displayValue);
-      const record: Record = new Record(
-        this.userName,
-        this.getOperatorDescription(this.currentOperator),
-        0,
-        this.firstOperand,
-        this.secondOperand,
-        0,
-        0,
-        new Date()
-      );
-
-      this.recordService.calculateOperation(record)
-        .subscribe(result => {
-          this.userInfoService.setBalance(result.userBalance);
-          this.displayValue = String(result.operationResponse);
-          this.firstOperand = null;
-          this.currentOperator = null;
-          this.waitingForSecondOperand = false;
-        });
+      const record = this.createRecord(this.currentOperator);
+      this.addRecord(record);
     }
   }
 
-  private getOperatorDescription(operator: TypeEnum): string {
+  private createRecord(typeEnum: TypeEnum): Record {
+    return new Record(
+      this.userName,
+      this.getOperatorDescription(typeEnum),
+      0,
+      this.firstOperand,
+      this.secondOperand,
+      0,
+      "",
+      new Date()
+    );
+  }
+
+  private addRecord(record: Record):void {
+    this.recordService.calculateOperation(record).pipe(
+      tap(result => {
+        this.userInfoService.setBalance(result.userBalance);
+        this.firstOperand = null;
+        this.currentOperator = null;
+        this.waitingForSecondOperand = false;
+        this.stringCreated = this.createString ? result.operationResponse : null;
+        this.displayValue = this.createString ? '0' : String(result.operationResponse);
+        this.createString = false;
+      }),
+      catchError(error => {
+        this.notificationService.showError(error.error.message);
+        return of(null);
+      })
+    ).subscribe();
+  }
+
+  randomString(typeEnum: TypeEnum) {
+    this.createString = true;
+    const record = this.createRecord(typeEnum);
+    this.addRecord(record);
+  }
+
+  private getOperatorDescription(operator: TypeEnum): Operation {
     switch (operator) {
       case TypeEnum.ADDITION:
-        return 'Addition';
+        return {'type': 'Addition'} as Operation;
       case TypeEnum.SUBTRACTION:
-        return 'Subtraction';
+        return {'type': 'Subtraction'} as Operation;
       case TypeEnum.MULTIPLICATION:
-        return 'Multiplication';
+        return {'type': 'Multiplication'} as Operation;
       case TypeEnum.DIVISION:
-        return 'Division';
+        return {'type': 'Division'} as Operation;
       case TypeEnum.SQUARE_ROOT:
-        return 'Square Root';
+        return {'type': 'square_root'} as Operation;
       case TypeEnum.RANDOM_STRING:
-        return 'Random String';
-      default:
-        return 'Unknown';
+        return {'type': 'random_string'} as Operation;
     }
   }
 }

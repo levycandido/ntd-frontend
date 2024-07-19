@@ -26,11 +26,14 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {AppRoutingModule} from "./app-routing.module";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import {DecimalFormatPipe} from "./services/pipes/DecimalFormatPipe";
+import { DecimalPipe } from '@angular/common';
 
 const routes: Routes = [
   {path: '', component: CalculatorComponent},
   {path: 'login', component: LoginComponent},
-  {path: 'signup', component: signupComponent}
+  {path: 'signup', component: signupComponent},
+  {path: 'records,', component: UserRecordsComponent}
 ];
 
 @NgModule({
@@ -40,7 +43,8 @@ const routes: Routes = [
     signupComponent,
     LoginComponent,
     CalculatorComponent,
-    UserRecordsComponent
+    UserRecordsComponent,
+    DecimalFormatPipe
   ],
   imports: [
     BrowserModule,
@@ -68,6 +72,7 @@ const routes: Routes = [
   providers: [
     AuthService,
     AuthGuard,
+    DecimalPipe,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

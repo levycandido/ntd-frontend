@@ -6,8 +6,9 @@ import {catchError, switchMap, tap} from "rxjs/operators";
 import {of} from "rxjs";
 import {NotificationService} from "../../../services/NotificationService";
 import {UserService} from "../../../services/UserService";
-import {User} from "../../../models/User";
+import {UserDTO} from "../../../DTO/UserDTO";
 import {UserInfoService} from "../../../services/UserNameService";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'app-login',
@@ -25,8 +26,8 @@ export class LoginComponent implements OnInit {
     private notificationService: NotificationService,
     private userService: UserService,
     private userInfoService: UserInfoService,
-  ) {
-  }
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -39,7 +40,8 @@ export class LoginComponent implements OnInit {
     this.service.login(this.loginForm.value).pipe(
       tap(response => {
         if (response.jwt) {
-          localStorage.setItem('token', response.jwt);
+          this.authService.login(response.jwt);
+
         }
       }),
       switchMap(response => {
@@ -73,7 +75,7 @@ export class LoginComponent implements OnInit {
     ).subscribe();
   }
 
-  private getUser(): User {
+  private getUser(): UserDTO {
     return {
       password: '',
       userName: '',

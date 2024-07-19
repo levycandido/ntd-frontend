@@ -1,14 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import {RecordService} from "../services/RecordService";
+import {Record} from "../entity/Record";
 
-interface Record {
-  operation: string;
-  amount: number;
-  balance: number;
-  response: string;
-  date: Date;
-}
 
 @Component({
   selector: 'app-user-records',
@@ -16,22 +11,28 @@ interface Record {
   styleUrls: ['./user-records.component.scss']
 })
 export class UserRecordsComponent implements OnInit {
-  displayedColumns: string[] = ['operation', 'amount', 'balance', 'response', 'date', 'delete'];
-  dataSource = new MatTableDataSource<Record>([
-    { operation: 'Addition', amount: 5, balance: 95, response: '10', date: new Date() },
-  ]);
+  displayedColumns: string[] = ['operation', 'amount', 'balance', 'response', 'date'];
+  dataSource: MatTableDataSource<Record>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  constructor(private recordService: RecordService) {
+    this.dataSource = new MatTableDataSource([]);
+  }
+
   ngOnInit() {
-    this.dataSource.paginator = this.paginator;
+    this.recordService.getRecords().subscribe((records: Record[]) => {
+      this.dataSource.data = records;
+      this.dataSource.paginator = this.paginator;
+    });
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  deleteRecord(id: number) {
+  applyFilterColumn(event: Event, column: string) {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.dataSource.filterPredicate = (data: Record, filter: string) => {
+      const textToSearch = data[column as keyof Record] && data[column as keyof Record].toString().toLowerCase() || '';
+      return textToSearch.includes(filter);
+    };
+    this.dataSource.filter = filterValue;
   }
 }

@@ -78,6 +78,10 @@
       background-color: #5c6bc0;
     }
   }
+
+  button.zero {
+    flex: 2;
+  }
 }
 
 .links {
@@ -113,4 +117,12 @@
 
 .login-button {
   margin-left: auto;
+}
+
+.string-created {
+  font-size: 1.2em;
+  margin-top: 20px;
+  color: #f8d959;
+  text-align: center;
+  width: 100%;
 }

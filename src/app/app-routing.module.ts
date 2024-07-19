@@ -8,7 +8,7 @@ import {signupComponent} from "./auth/components/register/signup.component";
 
 const routes: Routes = [
   { path: '', component: CalculatorComponent },
-  { path: 'user-records', component: UserRecordsComponent },
+  { path: 'records', component: UserRecordsComponent },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: signupComponent },
 ];

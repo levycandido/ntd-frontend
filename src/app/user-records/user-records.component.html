@@ -1,43 +1,69 @@
-<mat-toolbar color="primary">
-  <button mat-button routerLink="/">Back to Calculator</button>
-</mat-toolbar>
-
 <div class="records-container">
-  <mat-form-field class="search-field">
-    <input matInput (keyup)="applyFilter($event)" placeholder="Search">
-  </mat-form-field>
+  <button mat-icon-button routerLink="/" class="back-button" aria-label="Back to Calculator">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
 
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    <ng-container matColumnDef="operation">
-      <th mat-header-cell *matHeaderCellDef> Operation </th>
-      <td mat-cell *matCellDef="let record"> {{record.operation}} </td>
-    </ng-container>
-    <ng-container matColumnDef="amount">
-      <th mat-header-cell *matHeaderCellDef> Amount </th>
-      <td mat-cell *matCellDef="let record"> {{record.amount}} </td>
-    </ng-container>
-    <ng-container matColumnDef="balance">
-      <th mat-header-cell *matHeaderCellDef> Balance </th>
-      <td mat-cell *matCellDef="let record"> {{record.balance}} </td>
-    </ng-container>
-    <ng-container matColumnDef="response">
-      <th mat-header-cell *matHeaderCellDef> Response </th>
-      <td mat-cell *matCellDef="let record"> {{record.response}} </td>
-    </ng-container>
-    <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef> Date </th>
-      <td mat-cell *matCellDef="let record"> {{record.date | date}} </td>
-    </ng-container>
-    <ng-container matColumnDef="delete">
-      <th mat-header-cell *matHeaderCellDef> Delete </th>
-      <td mat-cell *matCellDef="let record">
-        <button mat-raised-button color="warn" (click)="deleteRecord(record.id)">Delete</button>
-      </td>
-    </ng-container>
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 custom-table full-width-table">
+      <!-- Operation Column -->
+      <ng-container matColumnDef="operation">
+        <th mat-header-cell *matHeaderCellDef class="text-center">
+          <div class="column-title">Operation</div>
+          <mat-form-field appearance="outline" class="filter-field">
+            <input matInput (keyup)="applyFilterColumn($event, 'operation.type')" placeholder="Filter">
+          </mat-form-field>
+        </th>
+        <td mat-cell *matCellDef="let record" class="text-center">{{record.operation.type}}</td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
+      <!-- Amount Column -->
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef class="text-center">
+          <div class="column-title">Amount</div>
+          <mat-form-field appearance="outline" class="filter-field">
+            <input matInput (keyup)="applyFilterColumn($event, 'amount')" placeholder="Filter">
+          </mat-form-field>
+        </th>
+        <td mat-cell *matCellDef="let record" class="text-center">{{record.amount | currency}}</td>
+      </ng-container>
 
-  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      <!-- Balance Column -->
+      <ng-container matColumnDef="balance">
+        <th mat-header-cell *matHeaderCellDef class="text-center">
+          <div class="column-title">Balance</div>
+          <mat-form-field appearance="outline" class="filter-field">
+            <input matInput (keyup)="applyFilterColumn($event, 'userBalance')" placeholder="Filter">
+          </mat-form-field>
+        </th>
+        <td mat-cell *matCellDef="let record" class="text-center">{{record.userBalance | currency}}</td>
+      </ng-container>
+
+      <!-- Response Column -->
+      <ng-container matColumnDef="response">
+        <th mat-header-cell *matHeaderCellDef class="text-center">
+          <div class="column-title">Response</div>
+          <mat-form-field appearance="outline" class="filter-field">
+            <input matInput (keyup)="applyFilterColumn($event, 'operationResponse')" placeholder="Filter">
+          </mat-form-field>
+        </th>
+        <td mat-cell *matCellDef="let record" class="text-center">{{record.operationResponse | decimalFormat}}</td>
+      </ng-container>
+
+      <!-- Date Column -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef class="text-center">
+          <div class="column-title">Date</div>
+          <mat-form-field appearance="outline" class="filter-field">
+            <input matInput (keyup)="applyFilterColumn($event, 'date')" placeholder="Filter">
+          </mat-form-field>
+        </th>
+        <td mat-cell *matCellDef="let record" class="text-center">{{record.date | date}}</td>
+      </ng-container>
+
+     <tr mat-header-row *matHeaderRowDef="displayedColumns" class="header-row"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="data-row"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
 </div>

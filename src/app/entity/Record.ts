@@ -1,22 +1,24 @@
+import {Operation} from "./Operation";
+
 export class Record {
   id?: number;
   userId: string;
-  operation: string;
+  operation: Operation;
   amount:number;
   firstValue: number;
   secValue: number;
   userBalance: number;
-  operationResponse: number;
+  operationResponse: string;
   timestamp: Date;
 
   constructor(
   userId: string,
-  operation: string,
+  operation: Operation,
   amount: number,
   firstValue: number,
   secValue: number,
   userBalance: number,
-  operationResponse: number,
+  operationResponse: string,
   timestamp: Date
   ) {
     this.userId = userId;

@@ -1,36 +1,27 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
+  isLoggedIn$ = this.loggedIn.asObservable();
 
-  constructor() { }
+  constructor(private router: Router) {}
 
-  login(username: string, password: string): boolean {
-    if (username === 'admin' && password === 'admin') {
-      localStorage.setItem('user', 'admin');
-      localStorage.setItem('token', 'mock-token-admin');
-      return true;
-    } else if (username === 'user' && password === 'password') {
-      localStorage.setItem('user', 'user');
-      localStorage.setItem('token', 'mock-token-user');
-      return true;
-    }
-    return false;
-  }
-
-  getToken(): string | null {
-    return localStorage.getItem('jwt');
-  }
-
-  isLoggedIn(): boolean {
-    return localStorage.getItem('userName') !== null;
+  login(token: string): void {
+    localStorage.setItem('token', token);
+    this.loggedIn.next(true);
   }
 
   logout(): void {
-    localStorage.removeItem('email');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('jwt');
+    localStorage.removeItem('token');
+    this.loggedIn.next(false);
+  }
+
+  private hasToken(): boolean {
+    return !!localStorage.getItem('token');
   }
 }
